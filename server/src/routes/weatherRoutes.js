@@ -1,14 +1,14 @@
 import express from "express";
 
 import {
-  getWeatherData,
+  getWeatherAnalytics,
 } from "../controllers/weatherController.js";
 
 const router = express.Router();
 
 router.get(
   "/",
-  getWeatherData
+  getWeatherAnalytics
 );
 
 export default router;

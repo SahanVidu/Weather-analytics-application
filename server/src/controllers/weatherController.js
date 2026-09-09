@@ -1,76 +1,121 @@
 import { getCityCodes } from "../utils/cities.js";
-import { fetchWeatherByCityId } from "../services/weatherService.js";
 
-export async function getWeatherData(
+import {
+  fetchWeatherByCityId,
+} from "../services/weatherService.js";
+
+import {
+  calculateComfortIndex,
+} from "../services/comfortService.js";
+
+import {
+  rankCities,
+} from "../utils/ranking.js";
+
+export async function getWeatherAnalytics(
   req,
   res,
   next
 ) {
   try {
-    const cityCodes = getCityCodes();
+    const cityCodes =
+      getCityCodes();
 
     const results =
       await Promise.allSettled(
-        cityCodes.map((cityId) =>
-          fetchWeatherByCityId(cityId)
+        cityCodes.map(
+          (cityId) =>
+            fetchWeatherByCityId(
+              cityId
+            )
         )
       );
 
     const cities = [];
     const failedCities = [];
 
-    results.forEach((result, index) => {
-      if (result.status === "fulfilled") {
-        const weather = result.value;
+    results.forEach(
+      (result, index) => {
+        if (
+          result.status ===
+          "fulfilled"
+        ) {
+          const weather =
+            result.value;
 
-        cities.push({
-          cityId: weather.id,
+          const comfort =
+            calculateComfortIndex(
+              weather
+            );
 
-          cityName: weather.name,
+          cities.push({
+            cityId:
+              weather.id,
 
-          country:
-            weather.sys?.country,
+            cityName:
+              weather.name,
 
-          weatherDescription:
-            weather.weather?.[0]
-              ?.description || "Unknown",
+            country:
+              weather.sys?.country,
 
-          temperature:
-            weather.main?.temp,
+            weatherDescription:
+              weather.weather?.[0]
+                ?.description ||
+              "Unknown",
 
-          humidity:
-            weather.main?.humidity,
+            temperature:
+              weather.main?.temp,
 
-          windSpeed:
-            weather.wind?.speed,
+            humidity:
+              weather.main?.humidity,
 
-          cloudiness:
-            weather.clouds?.all,
+            windSpeed:
+              weather.wind?.speed,
 
-          pressure:
-            weather.main?.pressure,
+            cloudiness:
+              weather.clouds?.all,
 
-          visibility:
-            weather.visibility,
-        });
-      } else {
-        failedCities.push({
-          cityId: cityCodes[index],
-          error:
-            "Unable to retrieve weather data",
-        });
+            pressure:
+              weather.main?.pressure,
+
+            visibility:
+              weather.visibility,
+
+            comfortScore:
+              comfort.score,
+
+            comfortComponents:
+              comfort.components,
+          });
+        } else {
+          failedCities.push({
+            cityId:
+              cityCodes[index],
+
+            error:
+              "Unable to retrieve weather data",
+          });
+        }
       }
-    });
+    );
+
+    const rankedCities =
+      rankCities(cities);
 
     res.json({
       success: true,
 
-      count: cities.length,
+      count:
+        rankedCities.length,
 
       failedCount:
         failedCities.length,
 
-      cities,
+      updatedAt:
+        new Date().toISOString(),
+
+      cities:
+        rankedCities,
 
       failedCities,
     });
