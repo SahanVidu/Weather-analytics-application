@@ -91,62 +91,104 @@ export default function Dashboard() {
   }, [cities, search, sortBy]);
 
   if (loading) {
-    return <LoadingState />;
+    return (
+      <main className="dashboard-shell dashboard-shell--loading">
+        <LoadingState />
+      </main>
+    );
   }
 
   if (error) {
     return (
-      <main className="min-h-screen bg-gray-100 p-5">
+      <main className="dashboard-shell dashboard-shell--loading">
         <ErrorState message={error} />
       </main>
     );
   }
 
+  const averageTemperature = cities.length
+    ? Math.round(
+        (cities.reduce((total, city) => total + city.temperature, 0) /
+          cities.length) * 10
+      ) / 10
+    : 0;
+
+  const averageComfort = cities.length
+    ? Math.round(
+        cities.reduce((total, city) => total + city.comfortScore, 0) /
+          cities.length
+      )
+    : 0;
+
   return (
-    <main className="min-h-screen bg-gray-100 p-4 md:p-8">
-      <div className="mx-auto max-w-7xl">
-
-        {/* Header */}
-        <header className="mb-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Weather Analytics
-            </h1>
-
-            <p className="mt-1 text-gray-600">
-              Comfort Index Dashboard
+    <main className="dashboard-shell">
+      <div className="dashboard-container">
+        <header className="dashboard-header">
+          <div className="brand-lockup">
+            <p className="eyebrow">Live conditions</p>
+            <h1>Weather analytics</h1>
+            <p className="dashboard-subtitle">
+              Compare comfort across your tracked cities at a glance.
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
-            <span className="hidden text-sm text-gray-600 md:block">
-              {user?.email}
-            </span>
-
+          <div className="account-actions">
+            <span className="account-email">{user?.email}</span>
             <LogoutButton />
           </div>
         </header>
 
-        {/* Search and Sort */}
-        <section className="mb-6 rounded-xl bg-white p-4 shadow-sm">
-          <div className="flex flex-col gap-3 md:flex-row">
+        <nav className="dashboard-nav" aria-label="Dashboard sections">
+          <a href="#city-rankings">City rankings</a>
+          <a href="#weather-chart">Weather chart</a>
+        </nav>
 
+        <section className="metrics-grid" aria-label="Weather summary">
+          <div className="metric-card">
+            <span className="metric-label">Cities tracked</span>
+            <strong>{cities.length}</strong>
+            <span className="metric-detail">Across your watchlist</span>
+          </div>
+          <div className="metric-card">
+            <span className="metric-label">Average comfort</span>
+            <strong>{averageComfort}</strong>
+            <span className="metric-detail">Out of 100 points</span>
+          </div>
+          <div className="metric-card">
+            <span className="metric-label">Average temperature</span>
+            <strong>{averageTemperature}°</strong>
+            <span className="metric-detail">Current city average</span>
+          </div>
+        </section>
+
+        <section className="control-panel" aria-label="Filter cities">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Explore the list</p>
+              <h2>Find a city</h2>
+            </div>
+            <span className="result-count">
+              {filteredCities.length} result{filteredCities.length === 1 ? "" : "s"}
+            </span>
+          </div>
+
+          <div className="control-row">
             <input
               type="text"
-              placeholder="Search city..."
+              aria-label="Search cities"
+              placeholder="Search by city name"
               value={search}
               onChange={(e) =>
                 setSearch(e.target.value)
               }
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
             />
 
             <select
+              aria-label="Sort cities"
               value={sortBy}
               onChange={(e) =>
                 setSortBy(e.target.value)
               }
-              className="rounded-lg border border-gray-300 px-4 py-3"
             >
               <option value="score">
                 Sort by Comfort Score
@@ -164,23 +206,41 @@ export default function Dashboard() {
                 Sort by Rank
               </option>
             </select>
-
           </div>
         </section>
 
-        {/* Weather Chart */}
-        <WeatherChart
-          cities={filteredCities}
-        />
+        <section id="weather-chart" className="chart-section" aria-labelledby="chart-title">
+          <div className="section-heading section-heading--chart">
+            <div>
+              <p className="eyebrow">Visual comparison</p>
+              <h2 id="chart-title">Temperature by city</h2>
+            </div>
+            <p className="section-note">Select a city below for the full snapshot.</p>
+          </div>
+          <WeatherChart cities={filteredCities} />
+        </section>
 
-        {/* City Cards */}
-        <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredCities.map((city) => (
-            <CityCard
-              key={city.cityId}
-              city={city}
-            />
-          ))}
+        <section id="city-rankings" className="rankings-section" aria-labelledby="rankings-title">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Comfort index</p>
+              <h2 id="rankings-title">City rankings</h2>
+            </div>
+            <span className="section-note">Sorted by {sortBy}</span>
+          </div>
+
+          {filteredCities.length > 0 ? (
+            <div className="city-grid">
+              {filteredCities.map((city) => (
+                <CityCard key={city.cityId} city={city} />
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <h3>No cities found</h3>
+              <p>Try a different search term to see more weather data.</p>
+            </div>
+          )}
         </section>
 
       </div>

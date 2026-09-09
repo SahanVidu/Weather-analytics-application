@@ -1,69 +1,62 @@
 export default function CityCard({ city }) {
   return (
-    <article className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-200 transition hover:shadow-md">
-      <div className="mb-4 flex items-center justify-between">
-        <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
+    <article className="city-card">
+      <div className="city-card__top">
+        <span className="city-card__rank">
           Rank #{city.rank}
         </span>
 
-        <div className="text-right">
-          <p className="text-xs text-gray-500">
-            Comfort Score
-          </p>
-
-          <p className="text-2xl font-bold">
+        <div className="city-card__score">
+          <span>Comfort</span>
+          <strong>
             {city.comfortScore}
-          </p>
+          </strong>
         </div>
       </div>
 
-      <h2 className="text-xl font-bold text-gray-900">
+      <h2>
         {city.cityName}
       </h2>
 
-      <p className="mt-1 capitalize text-gray-500">
+      <p className="city-card__description">
         {city.weatherDescription}
       </p>
 
-      <div className="mt-5 grid grid-cols-2 gap-3">
-        <div className="rounded-lg bg-gray-50 p-3">
-          <p className="text-xs text-gray-500">
+      <div className="city-card__details">
+        <div className="city-card__detail">
+          <span>
             Temperature
-          </p>
-
-          <p className="font-semibold">
+          </span>
+          <strong>
             {city.temperature}°C
-          </p>
+          </strong>
         </div>
 
-        <div className="rounded-lg bg-gray-50 p-3">
-          <p className="text-xs text-gray-500">
+        <div className="city-card__detail">
+          <span>
             Humidity
-          </p>
-
-          <p className="font-semibold">
+          </span>
+          <strong>
             {city.humidity}%
-          </p>
+          </strong>
         </div>
 
-        <div className="rounded-lg bg-gray-50 p-3">
-          <p className="text-xs text-gray-500">
+        <div className="city-card__detail">
+          <span>
             Wind
-          </p>
-
-          <p className="font-semibold">
+          </span>
+          <strong>
             {city.windSpeed} m/s
-          </p>
+          </strong>
         </div>
 
-        <div className="rounded-lg bg-gray-50 p-3">
-          <p className="text-xs text-gray-500">
+        <div className="city-card__detail">
+          <span>
             Cloudiness
-          </p>
-
-          <p className="font-semibold">
+          </span>
+          <strong>
             {city.cloudiness}%
-          </p>
+          </strong>
         </div>
       </div>
     </article>
