@@ -12,7 +12,7 @@ export default function LoginButton() {
       onClick={() =>
         loginWithRedirect()
       }
-      className="rounded-lg bg-black px-5 py-3 text-white"
+      className="login-button"
     >
       Login
     </button>
