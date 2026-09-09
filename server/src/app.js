@@ -6,6 +6,9 @@ import { config } from "./config/env.js";
 
 import weatherRoutes from "./routes/weatherRoutes.js";
 
+import cacheRoutes
+  from "./routes/cacheRoutes.js";
+
 const app = express();
 
 app.use(helmet());
@@ -51,6 +54,11 @@ app.use(
         "Internal server error",
     });
   }
+);
+
+app.use(
+  "/api/cache",
+  cacheRoutes
 );
 
 export default app;
