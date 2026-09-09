@@ -4,10 +4,16 @@ import {
   getWeatherAnalytics,
 } from "../controllers/weatherController.js";
 
-const router = express.Router();
+import {
+  validateAccessToken,
+} from "../middleware/authMiddleware.js";
+
+const router =
+  express.Router();
 
 router.get(
   "/",
+  validateAccessToken,
   getWeatherAnalytics
 );
 
