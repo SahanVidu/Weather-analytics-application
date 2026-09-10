@@ -18,6 +18,7 @@ The system is designed to make cross-city weather comparison quick and readable.
 - Dashboard search and sorting by Comfort Score, temperature, humidity, or rank.
 - Responsive city cards showing current weather values and scores.
 - Recharts temperature-by-city bar chart.
+- Persistent light/dark mode toggle using local storage and the system preference as a fallback.
 - Health and cache-status endpoints.
 - Server-side tests for the Comfort Index and cache behavior.
 - Helmet security headers and CORS configuration.
@@ -557,9 +558,8 @@ Implemented bonus-style capabilities include:
 - Responsive dashboard and public home page.
 - Search and sorting controls.
 - Temperature visualization with Recharts.
+- Persistent light/dark mode toggle.
 - Server-side Comfort Index and cache unit tests.
-
-Dark mode is not implemented.
 
 ## Git Workflow
 
