@@ -1,4 +1,5 @@
 import LoginButton from "../components/LoginButton.jsx";
+import ThemeToggle from "../components/ThemeToggle.jsx";
 
 const signals = [
   ["01", "Compare cities", "See the same weather story across every location."],
@@ -15,7 +16,10 @@ export default function Home() {
             <span className="home-brand__mark" aria-hidden="true">F</span>
             <span>Fidenz / weather</span>
           </a>
-          <span className="home-nav__status"><span /> Live city conditions</span>
+          <div className="home-nav__actions">
+            <span className="home-nav__status"><span /> Live city conditions</span>
+            <ThemeToggle />
+          </div>
         </header>
 
         <section className="home-hero">
