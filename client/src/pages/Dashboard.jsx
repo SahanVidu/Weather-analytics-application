@@ -19,6 +19,7 @@ import ErrorState from "../components/ErrorState.jsx";
 import LogoutButton from "../components/LogoutButton.jsx";
 
 import WeatherChart from "../components/WeatherChart.jsx";
+import ThemeToggle from "../components/ThemeToggle.jsx";
 
 export default function Dashboard() {
   const {
@@ -134,6 +135,7 @@ export default function Dashboard() {
 
           <div className="account-actions">
             <span className="account-email">{user?.email}</span>
+            <ThemeToggle />
             <LogoutButton />
           </div>
         </header>
